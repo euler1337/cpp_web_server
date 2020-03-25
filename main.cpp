@@ -6,8 +6,20 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <netinet/in.h>
+#include <iomanip>
+#include <fstream>
 
 using namespace std;
+
+
+std::string readIndexFile(void) {
+    std::ifstream t("index.html");
+    std::string str((std::istreambuf_iterator<char>(t)),
+                 std::istreambuf_iterator<char>());
+
+    //cout << str << std::endl;
+    return str;
+}
 
 int main()
 {
@@ -62,9 +74,20 @@ int main()
             printf("No bytes are there to read");
         }
         
-        char *hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+        readIndexFile();
 
-        write(new_socket , hello , strlen(hello));
+        char *hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
+        std::string first("HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length:");
+        std::string htmlStr(readIndexFile());
+
+        std::string response;
+        response += first;
+        response += std::to_string(htmlStr.length());
+        response += std::string("\n\n");
+        response += htmlStr;
+
+
+        write(new_socket , response.c_str() , response.length());
     
         printf("------------------Hello message sent-------------------\n");
         close(new_socket);
