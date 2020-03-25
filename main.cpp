@@ -16,8 +16,6 @@ std::string readIndexFile(void) {
     std::ifstream t("index.html");
     std::string str((std::istreambuf_iterator<char>(t)),
                  std::istreambuf_iterator<char>());
-
-    //cout << str << std::endl;
     return str;
 }
 
@@ -76,7 +74,6 @@ int main()
         
         readIndexFile();
 
-        char *hello = "HTTP/1.1 200 OK\nContent-Type: text/plain\nContent-Length: 12\n\nHello world!";
         std::string first("HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length:");
         std::string htmlStr(readIndexFile());
 
@@ -86,10 +83,7 @@ int main()
         response += std::string("\n\n");
         response += htmlStr;
 
-
         write(new_socket , response.c_str() , response.length());
-    
-        printf("------------------Hello message sent-------------------\n");
         close(new_socket);
     }
    
